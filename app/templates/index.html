@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Главная{% endblock %}
+{% block content %}
+    <h1>Последние посты</h1>
+    {% for post in posts.items %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <a href="{{ url_for('view_post', id=post.id) }}" class="text-decoration-none">
+                        {{ post.title }}
+                    </a>
+                </h5>
+                <h6 class="card-subtitle mb-2 text-muted">
+                    Автор: {{ post.author.username }} | {{ post.timestamp.strftime('%d.%m.%Y %H:%M') }}
+                </h6>
+                <p class="card-text">{{ post.content[:200] }}{% if post.content|length > 200 %}...{% endif %}</p>
+            </div>
+        </div>
+    {% else %}
+        <p>Постов пока нет.</p>
+    {% endfor %}
+    
+    <!-- Пагинация -->
+    <nav>
+        <ul class="pagination">
+            {% if posts.has_prev %}
+                <li class="page-item"><a class="page-link" href="{{ url_for('index', page=posts.prev_num) }}">← Назад</a></li>
+            {% endif %}
+            <li class="page-item disabled"><span class="page-link">Страница {{ posts.page }} из {{ posts.pages }}</span></li>
+            {% if posts.has_next %}
+                <li class="page-item"><a class="page-link" href="{{ url_for('index', page=posts.next_num) }}">Вперед →</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endblock %}
